@@ -9,7 +9,6 @@ class TestSample {
         assertTrue { true }
     }
 
-    @Ignore
     @Test
     fun test_incorrect() {
         println("Hello, world!")

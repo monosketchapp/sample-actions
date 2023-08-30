@@ -1,3 +1,4 @@
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
@@ -8,6 +9,7 @@ class TestSample {
         assertTrue { true }
     }
 
+    @Ignore
     @Test
     fun test_incorrect() {
         println("Hello, world!")

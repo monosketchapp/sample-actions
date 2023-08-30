@@ -1,0 +1,67 @@
+name: Test - Build - Deploy
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - name: Cache local maven repository
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - run: |
+          ./gradlew jsTest --continue
+      - name: Publish test results
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: test-results
+          path: build/reports/tests/jsTest
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - name: Cache local maven repository
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - run: |
+          ./gradlew jsBrowserDistribution
+      - name: Publish artifact results
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifact
+          path: build/dist/js/productionExecutable
+
+  deploy:
+    runs-on:  ubuntu-latest
+    needs: [test, build]
+    steps:
+      - name: Get built artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: artifact
+          path: distributions
+      - name: Deploy
+        run: |
+          ls
+          echo "Deploying..."

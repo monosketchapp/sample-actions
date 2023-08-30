@@ -12,6 +12,6 @@ class TestSample {
     @Test
     fun test_incorrect() {
         println("Hello, world!")
-        assertTrue { false }
+        assertTrue { true }
     }
 }

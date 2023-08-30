@@ -9,19 +9,19 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
-      # - name: Cache local maven repository
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: |
-      #       ~/.gradle/caches
-      #       ~/.gradle/wrapper
-      #     key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-gradle-
+      - name: Cache local maven repository
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
       - run: |
           ./gradlew jsBrowserDistribution
-      # - name: Publish artifact results
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: artifact
-      #     path: build/dist/js/productionExecutable
+      - name: Publish artifact results
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifact
+          path: build/dist/js/productionExecutable

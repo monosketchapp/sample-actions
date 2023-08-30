@@ -63,5 +63,5 @@ jobs:
           path: distributions
       - name: Deploy
         run: |
-          ls
+          ls -R
           echo "Deploying..."
